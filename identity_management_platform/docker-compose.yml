@@ -1,0 +1,40 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SERVER_PORT=8081
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+  user-service:
+    build: ./user-service
+    ports:
+      - "8083:8083"
+  scim-service:
+    build: ./scim-service
+    ports:
+      - "8082:8082"
+    environment:
+      - GRPC_USER_HOST=user-service
+      - GRPC_USER_PORT=8083
+      - AUTH_INTROSPECTION_URL=http://auth-service:8081/oauth/introspect
+      - JWKS_URL=http://auth-service:8081/oauth/jwks
+  gateway:
+    image: envoyproxy/envoy:v1.30-latest
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - scim-service
+      - user-service
+networks:
+  default:
+    name: idm-net

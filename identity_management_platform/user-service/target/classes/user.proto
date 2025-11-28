@@ -1,0 +1,29 @@
+syntax = "proto3";
+package idm.user.v1;
+option java_multiple_files = true;
+
+service UserService {
+  rpc CreateUser (CreateUserRequest) returns (UserResponse);
+  rpc GetUser (GetUserRequest) returns (UserResponse);
+  rpc ListUsers (ListUsersRequest) returns (ListUsersResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message User {
+  string id = 1;
+  string userName = 2;
+  string givenName = 3;
+  string familyName = 4;
+  repeated string emails = 5;
+  bool active = 6;
+}
+
+message CreateUserRequest { User user = 1; }
+message GetUserRequest { string id = 1; }
+message ListUsersRequest { int32 page = 1; int32 pageSize = 2; }
+message UpdateUserRequest { User user = 1; }
+message DeleteUserRequest { string id = 1; }
+message DeleteUserResponse { bool deleted = 1; }
+message UserResponse { User user = 1; }
+message ListUsersResponse { repeated User users = 1; int32 total = 2; }

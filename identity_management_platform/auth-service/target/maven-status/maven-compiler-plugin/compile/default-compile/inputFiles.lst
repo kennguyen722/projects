@@ -1,0 +1,4 @@
+/ws/src/main/java/idm/auth/AuthServiceApplication.java
+/ws/src/main/java/idm/auth/config/JwtKeys.java
+/ws/src/main/java/idm/auth/config/SecurityConfig.java
+/ws/src/main/java/idm/auth/token/TokenController.java
