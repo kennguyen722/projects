@@ -1,0 +1,22 @@
+{
+  "name": "ai-analysis-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "dev:inspect": "cross-env NODE_OPTIONS=--inspect=9223 ts-node-dev --respawn src/index.ts",
+    "build": "tsc -p .",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "openai": "^4.75.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "ts-node-dev": "^2.0.0",
+    "cross-env": "^7.0.3"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "ingestion-service",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "dev:inspect": "cross-env NODE_OPTIONS=--inspect=9221 ts-node-dev --respawn src/index.ts",
+    "build": "tsc -p .",
+    "start": "node dist/index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "kafkajs": "^2.2.4",
+    "zod": "^3.23.8",
+    "dotenv": "^16.4.5",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "ts-node-dev": "^2.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/cors": "^2.8.17",
+    "cross-env": "^7.0.3"
+  }
+}

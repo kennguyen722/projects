@@ -1,0 +1,10 @@
+{"source":"frontend","level":"info","message":"User visited homepage","timestamp":"2025-11-30T20:00:01.000Z","context":{"route":"/"}}
+{"source":"api","level":"warn","message":"Slow response on GET /orders","timestamp":"2025-11-30T20:01:12.000Z","context":{"path":"/orders","latencyMs":920}}
+{"source":"payments","level":"error","message":"Payment gateway timeout","timestamp":"2025-11-30T20:02:47.000Z","context":{"attempt":1}}
+{"source":"search","level":"info","message":"Indexed 120 new documents","timestamp":"2025-11-30T20:03:29.000Z","context":{"batch":42}}
+{"source":"auth","level":"debug","message":"Token refreshed","timestamp":"2025-11-30T20:04:41.000Z","context":{"userId":"u-123"}}
+{"source":"api","level":"info","message":"Created order","timestamp":"2025-11-30T20:05:10.000Z","context":{"orderId":"o-987"}}
+{"source":"payments","level":"warn","message":"High retry rate detected","timestamp":"2025-11-30T20:06:22.000Z","context":{"retryRate":0.18}}
+{"source":"search","level":"error","message":"Elasticsearch cluster red","timestamp":"2025-11-30T20:07:05.000Z","context":{"node":"es-1"}}
+{"source":"frontend","level":"info","message":"User clicked CTA","timestamp":"2025-11-30T20:08:37.000Z","context":{"route":"/pricing"}}
+{"source":"auth","level":"warn","message":"Multiple failed logins","timestamp":"2025-11-30T20:09:59.000Z","context":{"ip":"203.0.113.5"}}

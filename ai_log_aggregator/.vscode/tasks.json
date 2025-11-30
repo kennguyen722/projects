@@ -1,0 +1,177 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "infra: up (profile)",
+      "type": "shell",
+      "command": "docker compose --profile infra up -d",
+      "options": { "cwd": "${workspaceFolder}/infra" },
+      "group": { "kind": "build", "isDefault": true },
+      "detail": "Start Kafka/ZK/Schema Registry/Postgres only"
+    },
+    {
+      "label": "infra: down -v (profile)",
+      "type": "shell",
+      "command": "docker compose --profile infra down -v",
+      "options": { "cwd": "${workspaceFolder}/infra" },
+      "detail": "Stop infra and remove volumes"
+    },
+    {
+      "label": "stack: up (full)",
+      "type": "shell",
+      "command": "docker compose up -d",
+      "options": { "cwd": "${workspaceFolder}/infra" },
+      "group": { "kind": "build" },
+      "detail": "Bring up full stack (infra + services)"
+    },
+    {
+      "label": "stack: down -v (full)",
+      "type": "shell",
+      "command": "docker compose down -v",
+      "options": { "cwd": "${workspaceFolder}/infra" },
+      "detail": "Tear down stack and remove volumes"
+    },
+
+    {
+      "label": "dev: ingestion (9221)",
+      "type": "shell",
+      "command": "npm run dev:inspect",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/ingestion-service"
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Start ingestion-service with Node inspector on 9221"
+    },
+    {
+      "label": "dev: normalizer (9222)",
+      "type": "shell",
+      "command": "npm run dev:inspect",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/normalizer-service"
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Start normalizer-service with Node inspector on 9222"
+    },
+    {
+      "label": "dev: ai-analysis (9223)",
+      "type": "shell",
+      "command": "npm run dev:inspect",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/ai-analysis-service"
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Start ai-analysis-service with Node inspector on 9223"
+    },
+    {
+      "label": "dev: alert (9224)",
+      "type": "shell",
+      "command": "npm run dev:inspect",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/alert-service"
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Start alert-service with Node inspector on 9224"
+    },
+    {
+      "label": "dev: storage (9225)",
+      "type": "shell",
+      "command": "npm run dev:inspect",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/storage-service"
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Start storage-service with Node inspector on 9225"
+    },
+    {
+      "label": "dev: websocket (9226)",
+      "type": "shell",
+      "command": "npm run dev:inspect",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/websocket-gateway"
+      },
+      "problemMatcher": ["$tsc"],
+      "detail": "Start websocket-gateway with Node inspector on 9226"
+    },
+    {
+      "label": "dev: dashboard",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/frontend/react-dashboard" },
+      "detail": "Start Vite dev server for the dashboard"
+    },
+
+    {
+      "label": "build: all backends",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/backend/ingestion-service" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "build: normalizer",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/backend/normalizer-service" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "build: ai-analysis",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/backend/ai-analysis-service" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "build: alert",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/backend/alert-service" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "build: storage",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/backend/storage-service" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "build: websocket",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/backend/websocket-gateway" },
+      "problemMatcher": ["$tsc"]
+    },
+    {
+      "label": "build: dashboard",
+      "type": "shell",
+      "command": "npm run build",
+      "options": { "cwd": "${workspaceFolder}/frontend/react-dashboard" }
+    },
+    {
+      "label": "build: all (parallel)",
+      "dependsOn": [
+        "build: all backends",
+        "build: normalizer",
+        "build: ai-analysis",
+        "build: alert",
+        "build: storage",
+        "build: websocket",
+        "build: dashboard"
+      ],
+      "dependsOrder": "parallel"
+    },
+    {
+      "label": "dev: backends (parallel)",
+      "dependsOn": [
+        "dev: ingestion (9221)",
+        "dev: normalizer (9222)",
+        "dev: ai-analysis (9223)",
+        "dev: alert (9224)",
+        "dev: storage (9225)",
+        "dev: websocket (9226)"
+      ],
+      "dependsOrder": "parallel"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach: ingestion (9221)",
+      "port": 9221,
+      "restart": true
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach: normalizer (9222)",
+      "port": 9222,
+      "restart": true
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach: ai-analysis (9223)",
+      "port": 9223,
+      "restart": true
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach: alert (9224)",
+      "port": 9224,
+      "restart": true
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach: storage (9225)",
+      "port": 9225,
+      "restart": true
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach: websocket (9226)",
+      "port": 9226,
+      "restart": true
+    },
+    {
+      "type": "pwa-msedge",
+      "request": "launch",
+      "name": "Launch Edge (Vite)",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/react-dashboard"
+    },
+    {
+      "type": "pwa-chrome",
+      "request": "launch",
+      "name": "Launch Chrome (Vite)",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend/react-dashboard"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Attach: All Backends",
+      "configurations": [
+        "Attach: ingestion (9221)",
+        "Attach: normalizer (9222)",
+        "Attach: ai-analysis (9223)",
+        "Attach: alert (9224)",
+        "Attach: storage (9225)",
+        "Attach: websocket (9226)"
+      ]
+    },
+    {
+      "name": "Dev: Dashboard + WS + Storage",
+      "configurations": [
+        "Launch Chrome (Vite)",
+        "Attach: websocket (9226)",
+        "Attach: storage (9225)"
+      ]
+    }
+  ]
+}

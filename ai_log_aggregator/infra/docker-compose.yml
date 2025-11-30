@@ -1,0 +1,108 @@
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    profiles: [infra]
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    profiles: [infra]
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+  schema-registry:
+    image: confluentinc/cp-schema-registry:7.5.0
+    profiles: [infra]
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    depends_on:
+      - kafka
+  postgres:
+    image: postgres:16
+    profiles: [infra]
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=logs
+    ports:
+      - "5432:5432"
+  ingestion-service:
+    build: ../backend/ingestion-service
+    restart: unless-stopped
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC_RAW=logs.raw
+      - PORT=3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - kafka
+  normalizer-service:
+    build: ../backend/normalizer-service
+    restart: unless-stopped
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC_RAW=logs.raw
+      - KAFKA_TOPIC_NORMALIZED=logs.normalized
+    depends_on:
+      - kafka
+  ai-analysis-service:
+    build: ../backend/ai-analysis-service
+    restart: unless-stopped
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC_NORMALIZED=logs.normalized
+      - KAFKA_TOPIC_INSIGHTS=logs.insights
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - kafka
+  alert-service:
+    build: ../backend/alert-service
+    restart: unless-stopped
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC_INSIGHTS=logs.insights
+    depends_on:
+      - kafka
+  storage-service:
+    build: ../backend/storage-service
+    restart: unless-stopped
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC_INSIGHTS=logs.insights
+      - POSTGRES_URL=postgres://postgres:postgres@postgres:5432/logs
+      - HTTP_PORT=4000
+    depends_on:
+      - kafka
+      - postgres
+    ports:
+      - "4000:4000"
+  websocket-gateway:
+    build: ../backend/websocket-gateway
+    restart: unless-stopped
+    environment:
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC_INSIGHTS=logs.insights
+      - WS_PORT=8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - kafka
+  react-dashboard:
+    build: ../frontend/react-dashboard
+    ports:
+      - "5173:5173"
+    depends_on:
+      - websocket-gateway

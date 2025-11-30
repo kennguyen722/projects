@@ -1,0 +1,13 @@
+{
+  "name": "ai-log-aggregator",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "demo": "node ./scripts/demo.js",
+    "demo:bringup": "node ./scripts/demo.js --bringup",
+    "demo:count": "node ./scripts/demo.js --count 500"
+    "demo:sample": "node scripts/demo.js --sample-only",
+    "lint": "eslint --max-warnings=0 'services/**/*.{ts,tsx,js}' 'frontend/src/**/*.{ts,tsx,js}'",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+  }
+}

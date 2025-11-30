@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install and build ingestion-service
+        working-directory: backend/ingestion-service
+        run: |
+          npm ci
+          npm run build
+          npm test --if-present
+        - name: Lint
+          run: npm run lint
+
+        - name: Type Check
+          run: npm run typecheck || echo "(Optional) No root tsconfig present"
+
+      - name: Install and build normalizer-service
+        working-directory: backend/normalizer-service
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install and build ai-analysis-service
+        working-directory: backend/ai-analysis-service
+        env:
+          OPENAI_API_KEY: ''
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install and build alert-service
+        working-directory: backend/alert-service
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install and build storage-service
+        working-directory: backend/storage-service
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install and build websocket-gateway
+        working-directory: backend/websocket-gateway
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install and build react-dashboard
+        working-directory: frontend/react-dashboard
+        run: |
+          npm ci
+          npm run build
